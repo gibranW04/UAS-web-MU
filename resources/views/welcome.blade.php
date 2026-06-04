@@ -42,6 +42,45 @@
         .btn-primary:hover {
             transform: translateY(-2px);
         }
+        .btn-secondary {
+            display: inline-block;
+            margin-top: 25px;
+            margin-left: 12px;
+            padding: 14px 28px;
+            background: #111;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 999px;
+            transition: transform .2s ease, background .2s ease;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            background: #333;
+        }
+        .hero-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            gap: 12px;
+        }
+        .hero-nav p {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .hero-nav form {
+            margin: 0;
+        }
+        .hero-actions {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
         .section {
             padding: 60px 20px;
             max-width: 1200px;
@@ -108,36 +147,42 @@
         <img class="logo" src="https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg" alt="Manchester United Logo">
         <h1>Manchester United Store</h1>
         <p>Temukan jersey resmi, merchandise eksklusif, dan koleksi terbaru untuk semua fans The Red Devils. Belanja sekarang dan tunjukkan dukunganmu dengan penuh gaya.</p>
-        <a href="#products" class="btn-primary">Lihat Koleksi</a>
+        <div class="hero-nav">
+            <p>Selamat datang, {{ auth()->user()->name }}. Temukan koleksi resmi MU dan belanja dengan mudah.</p>
+            <div class="flex gap-3 flex-wrap">
+                <a href="{{ auth()->user()->hasRole('admin') ? route('admin.dashboard') : route('user.dashboard') }}" class="btn-primary">Dashboard</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn-secondary">Logout</button>
+                </form>
+            </div>
+        </div>
     </section>
 
     <section id="products" class="section">
         <h2>Produk Unggulan</h2>
         <div class="products">
-            <article class="card">
-                <img src="https://images.pexels.com/photos/3617696/pexels-photo-3617696.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Jersey Home 2025">
-                <div class="card-content">
-                    <h3>Jersey Home 2025</h3>
-                    <p>Desain klasik merah dengan detail modern, bahan breathable untuk kenyamanan sepanjang hari.</p>
-                    <div class="price">Rp 899.000</div>
+            @forelse ($products as $product)
+                @php
+                    $image = $product->images->first();
+                    $imageUrl = $image ? asset('storage/' . $image->image) : 'https://images.pexels.com/photos/3617696/pexels-photo-3617696.jpeg?auto=compress&cs=tinysrgb&w=800';
+                    $price = $product->variants->min('price');
+                @endphp
+
+                <article class="card">
+                    <img src="{{ $imageUrl }}" alt="{{ $product->name }}">
+                    <div class="card-content">
+                        <h3>{{ $product->name }}</h3>
+                        <p>{{ \Illuminate\Support\Str::limit($product->description, 120) }}</p>
+                        <div class="price">{{ $price ? 'Rp ' . number_format($price, 0, ',', '.') : 'Harga N/A' }}</div>
+                    </div>
+                </article>
+            @empty
+                <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                    <h3>Tidak ada produk tersedia</h3>
+                    <p>Produk akan muncul di halaman utama setelah admin menambahkannya.</p>
                 </div>
-            </article>
-            <article class="card">
-                <img src="https://images.pexels.com/photos/1243510/pexels-photo-1243510.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Kemeja Away 2025">
-                <div class="card-content">
-                    <h3>Jersey Away 2025</h3>
-                    <p>Warna netral dengan aksen merah, cocok untuk gaya santai sekaligus menunjukkan identitas MU.</p>
-                    <div class="price">Rp 849.000</div>
-                </div>
-            </article>
-            <article class="card">
-                <img src="https://images.pexels.com/photos/838643/pexels-photo-838643.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Merchandise MU">
-                <div class="card-content">
-                    <h3>Topi & Aksesori</h3>
-                    <p>Topi, syal, dan koleksi aksesori resmi untuk dukungan setiap hari.</p>
-                    <div class="price">Mulai dari Rp 199.000</div>
-                </div>
-            </article>
+            @endforelse
         </div>
     </section>
 

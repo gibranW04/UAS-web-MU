@@ -2,14 +2,14 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
+    <title>User Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
 <div class="max-w-4xl mx-auto mt-16 bg-white p-8 rounded-lg shadow">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Dashboard Admin</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Dashboard User</h1>
             <p class="text-gray-600 mt-1">Selamat datang, {{ auth()->user()->name }} 👋</p>
         </div>
         <div class="flex gap-3 flex-wrap">
@@ -22,13 +22,16 @@
             </form>
         </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <a href="{{ route('admin.categories.index') }}" class="block p-6 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition">
-            📂 Category
-        </a>
-        <a href="{{ route('admin.products.index') }}" class="block p-6 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition">
-            📦 Product
-        </a>
+    <div class="space-y-4">
+        <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+            <h2 class="font-semibold text-lg text-gray-800">Akun Anda</h2>
+            <p class="text-gray-600 mt-2">Email: {{ auth()->user()->email }}</p>
+            <p class="text-gray-600">Peran: {{ auth()->user()->getRoleNames()->join(', ') }}</p>
+        </div>
+        <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
+            <p class="text-gray-700">Gunakan dashboard ini untuk melihat informasi akun dan kembali ke toko Manchester United.</p>
+            <a href="{{ url('/') }}" class="inline-block mt-4 text-red-600 hover:text-red-700">Kembali ke toko</a>
+        </div>
     </div>
 </div>
 </body>

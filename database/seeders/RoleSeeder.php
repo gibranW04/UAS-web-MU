@@ -14,6 +14,7 @@ class RoleSeeder extends Seeder
     {
         collect([
             ['name' => 'admin'],
+            ['name' => 'user'],
             ['name' => 'member'],
             ['name' => 'author'],
         ])->each(fn ($data) => Role::create($data));

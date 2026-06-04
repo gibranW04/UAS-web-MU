@@ -10,10 +10,16 @@
 <div class="bg-white p-6 rounded shadow">
     <div class="flex justify-between mb-4">
         <h1 class="text-xl font-bold">Data Product</h1>
-        <a href="{{ route('admin.products.create') }}"
-           class="bg-green-600 text-white px-4 py-2 rounded">
-           + Tambah
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.dashboard') }}"
+               class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">
+               ← Dashboard
+            </a>
+            <a href="{{ route('admin.products.create') }}"
+               class="bg-green-600 text-white px-4 py-2 rounded">
+               + Tambah
+            </a>
+        </div>
     </div>
 
 

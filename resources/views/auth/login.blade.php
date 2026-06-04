@@ -38,6 +38,8 @@
             margin-top: 15px;
             text-align: center;
             font-size: 14px;
+            color: #2f3640;
+            text-decoration: none;
         }
         .error {
             color: red;

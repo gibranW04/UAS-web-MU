@@ -12,6 +12,13 @@
     <h1 class="text-xl font-bold mb-4">Tambah Product</h1>
 
 
+    <div class="flex justify-between mb-4">
+        <a href="{{ route('admin.dashboard') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">
+            ← Kembali ke Dashboard
+        </a>
+    </div>
+
+
     <form method="POST"
           enctype="multipart/form-data"
           action="{{ route('admin.products.store') }}"
@@ -21,12 +28,18 @@
 
         {{-- Nama --}}
         <input name="name"
+               value="{{ old('name') }}"
+               required
                class="w-full border p-2 rounded"
                placeholder="Nama Product">
+        @error('name')
+            <p class="text-red-600 text-sm">{{ $message }}</p>
+        @enderror
 
 
         {{-- Kategori --}}
         <select name="category_id"
+                required
                 class="w-full border p-2 rounded">
             <option value="">-- Kategori --</option>
             @foreach($categories as $c)
@@ -38,8 +51,12 @@
         {{-- Deskripsi --}}
         <textarea name="description"
                   rows="4"
+                  required
                   class="w-full border p-2 rounded"
-                  placeholder="Deskripsi"></textarea>
+                  placeholder="Deskripsi">{{ old('description') }}</textarea>
+        @error('description')
+            <p class="text-red-600 text-sm">{{ $message }}</p>
+        @enderror
 
 
         {{-- Images --}}
@@ -77,11 +94,18 @@
 
 
                     <input name="variants[0][price]"
+                           type="number"
+                           min="0"
+                           step="0.01"
+                           required
                            placeholder="Harga"
                            class="border p-2 rounded">
 
 
                     <input name="variants[0][stock]"
+                           type="number"
+                           min="0"
+                           required
                            placeholder="Stok"
                            class="border p-2 rounded">
 
@@ -129,11 +153,18 @@ function addVariant() {
 
 
             <input name="variants[${variantIndex}][price]"
+                   type="number"
+                   min="0"
+                   step="0.01"
+                   required
                    placeholder="Harga"
                    class="border p-2 rounded">
 
 
             <input name="variants[${variantIndex}][stock]"
+                   type="number"
+                   min="0"
+                   required
                    placeholder="Stok"
                    class="border p-2 rounded">
 

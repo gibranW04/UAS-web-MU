@@ -19,10 +19,13 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        input {
+        input,
+        select {
             width: 100%;
             padding: 10px;
             margin-bottom: 12px;
+            border: 1px solid #dcdde1;
+            border-radius: 6px;
         }
         button {
             width: 100%;
@@ -38,6 +41,8 @@
             margin-top: 15px;
             text-align: center;
             font-size: 14px;
+            color: #2f3640;
+            text-decoration: none;
         }
         .error {
             color: red;
@@ -65,11 +70,12 @@
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="password_confirmation" placeholder="Konfirmasi Password" required>
 
+        <input type="hidden" name="role" value="user">
+
         <button type="submit">Register</button>
     </form>
 
     <a href="{{ route('login') }}">Sudah punya akun? Login</a>
 </div>
-
 </body>
 </html>

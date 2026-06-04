@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'password' => bcrypt('aquarius2004'),
         ]);
 
-        $role = Role::find(1);
+        $role = Role::where('name', 'admin')->first();
 
         if ($role) {
             $user->assignRole($role);
