@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AddressController extends Controller
 {
@@ -50,6 +51,8 @@ class AddressController extends Controller
         $validated['user_id'] = Auth::id();
 
         Address::create($validated);
+
+        Alert::toast('Alamat berhasil ditambahkan!', 'success');
 
         return redirect()
             ->route('user.addresses.index')
@@ -97,6 +100,8 @@ class AddressController extends Controller
 
         $address->update($validated);
 
+        Alert::toast('Alamat berhasil diperbarui!', 'success');
+
         return redirect()
             ->route('user.addresses.index')
             ->with(
@@ -115,6 +120,8 @@ class AddressController extends Controller
         }
 
         $address->delete();
+
+        Alert::toast('Alamat berhasil dihapus!', 'success');
 
         return redirect()
             ->route('user.addresses.index')

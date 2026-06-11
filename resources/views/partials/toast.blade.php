@@ -1,0 +1,1 @@
+{{-- Toast notifications are now handled by SweetAlert (@include('partials.sweetalert')) --}}

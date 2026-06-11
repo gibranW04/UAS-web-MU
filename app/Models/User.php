@@ -21,6 +21,8 @@ class User extends Authenticatable
         'github',
         'instagram',
         'about',
+        'provider',
+        'provider_id',
     ];
 
     protected $hidden = [
@@ -40,7 +42,16 @@ class User extends Authenticatable
 
     public function defaultAddress()
     {
-
         return $this->hasOne(Address::class)->where('is_default', true);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
     }
 }

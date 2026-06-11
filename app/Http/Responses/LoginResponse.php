@@ -3,6 +3,7 @@
 namespace App\Http\Responses;
 
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class LoginResponse implements LoginResponseContract
 {
@@ -10,10 +11,19 @@ class LoginResponse implements LoginResponseContract
     {
         $user = auth()->user();
 
-        if ($user->hasRole('admin')) {
-            return redirect('/admin/dashboard');
+        Alert::toast(
+            'Selamat datang kembali, ' . $user->name . '!',
+            'success'
+        );
+
+        if ($user && $user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
         }
 
-        return redirect('/user/dashboard');
+        if ($user && $user->hasRole('user')) {
+            return redirect()->route('user.dashboard');
+        }
+
+        return redirect()->route('home');
     }
 }

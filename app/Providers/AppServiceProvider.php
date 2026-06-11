@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers;
-
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

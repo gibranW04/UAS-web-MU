@@ -6,8 +6,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Midtrans\Snap;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 class CheckoutController extends Controller
@@ -60,6 +63,8 @@ class CheckoutController extends Controller
 
         session(['cart' => $cart]);
 
+        Alert::toast('Produk berhasil ditambah ke keranjang!', 'success');
+
         return redirect()->route('cart.index')->with('success', 'Produk berhasil ditambah ke keranjang!');
     }
 
@@ -103,27 +108,46 @@ class CheckoutController extends Controller
     /**
      * MIDTRANS CHECKOUT
      */
-public function store(Request $request)
+    public function store(Request $request)
     {
         $cart = session('cart', []);
         if (empty($cart)) {
             return response()->json(['error' => 'Keranjang kosong'], 400);
         }
 
-
         $request->validate([
             'address_id' => 'required|exists:addresses,id'
         ]);
 
-
         $address = Address::findOrFail($request->address_id);
         $total = collect($cart)->sum(fn ($i) => $i['price'] * $i['qty']);
 
+        $orderNumber = 'ORD-' . now()->format('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
 
-        // Parameter Midtrans
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'order_number' => $orderNumber,
+            'status' => 'pending',
+            'total_amount' => $total,
+            'shipping_address_id' => $address->id,
+            'payment_status' => 'pending',
+        ]);
+
+        foreach ($cart as $item) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_variant_id' => $item['variant_id'],
+                'product_name' => $item['product_name'],
+                'variant_label' => $item['variant_label'] ?? null,
+                'price' => $item['price'],
+                'qty' => $item['qty'],
+                'subtotal' => $item['price'] * $item['qty'],
+            ]);
+        }
+
         $params = [
             'transaction_details' => [
-                'order_id' => 'ORDER-' . time() . '-' . Auth::id(),
+                'order_id' => $orderNumber,
                 'gross_amount' => (int) $total,
             ],
             'customer_details' => [
@@ -139,7 +163,6 @@ public function store(Request $request)
                     'country_code' => 'IDN'
                 ],
             ],
-            // Item details (Opsional, agar muncul rincian di Midtrans)
             'item_details' => collect($cart)->map(function($item) {
                 return [
                     'id' => $item['variant_id'],
@@ -150,11 +173,13 @@ public function store(Request $request)
             })->values()->all(),
         ];
 
-
         try {
             $snapToken = Snap::getSnapToken($params);
-            return response()->json(['snap_token' => $snapToken]);
+            $order->update(['snap_token' => $snapToken]);
+            session()->forget('cart');
+            return response()->json(['snap_token' => $snapToken, 'order_id' => $order->id]);
         } catch (\Exception $e) {
+            $order->update(['status' => 'failed', 'notes' => 'Midtrans error: ' . $e->getMessage()]);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

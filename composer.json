@@ -9,8 +9,10 @@
         "laravel/fortify": "^1.37",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.3",
+        "laravel/socialite": "*",
         "laravel/tinker": "^2.9",
         "midtrans/midtrans-php": "^2.6",
+        "realrashid/sweet-alert": "*",
         "spatie/laravel-permission": "^6.25"
     },
     "require-dev": {

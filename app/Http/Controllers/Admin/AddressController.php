@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 class AddressController extends Controller
@@ -41,6 +42,7 @@ class AddressController extends Controller
         // Masukkan user_id otomatis dari ID Admin yang login
         Address::create($request->all() + ['user_id' => Auth::id()]);
 
+        Alert::toast('Alamat berhasil ditambahkan!', 'success');
 
         return redirect()->route('admin.addresses.index')->with('success', 'Alamat Anda berhasil ditambahkan');
     }
@@ -62,6 +64,7 @@ class AddressController extends Controller
 
 
         $address->update($request->all());
+        Alert::toast('Alamat berhasil diperbarui!', 'success');
         return redirect()->route('admin.addresses.index')->with('success', 'Alamat Anda berhasil diperbarui');
     }
 
@@ -72,6 +75,7 @@ class AddressController extends Controller
 
 
         $address->delete();
+        Alert::toast('Alamat berhasil dihapus!', 'success');
         return back()->with('success', 'Alamat berhasil dihapus');
     }
 }

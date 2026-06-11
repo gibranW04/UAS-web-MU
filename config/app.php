@@ -102,11 +102,18 @@ return [
     'previous_keys' => [
         ...array_filter(
             explode(',', env('APP_PREVIOUS_KEYS', ''))
-        ),
-    ],
+            ),
 
-    /*
-    |--------------------------------------------------------------------------
+            ],
+            // 'providers' => [
+            // /*
+            // * Package Service Providers...
+            // */
+            // RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+            // ],
+
+            /*
+            |--------------------------------------------------------------------------
     | Maintenance Mode Driver
     |--------------------------------------------------------------------------
     |
@@ -124,3 +131,4 @@ return [
     ],
 
 ];
+

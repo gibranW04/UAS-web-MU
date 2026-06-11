@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 class CategoryController extends Controller
@@ -38,6 +39,8 @@ class CategoryController extends Controller
         ]);
 
 
+        Alert::toast('Category berhasil ditambahkan!', 'success');
+
         return redirect()
             ->route('admin.categories.index')
             ->with('success', 'Category berhasil ditambahkan');
@@ -63,6 +66,8 @@ class CategoryController extends Controller
         ]);
 
 
+        Alert::toast('Category berhasil diperbarui!', 'success');
+
         return redirect()
             ->route('admin.categories.index')
             ->with('success', 'Category berhasil diperbarui');
@@ -73,6 +78,8 @@ class CategoryController extends Controller
     {
         $category->delete();
 
+
+        Alert::toast('Category berhasil dihapus!', 'success');
 
         return redirect()
             ->route('admin.categories.index')

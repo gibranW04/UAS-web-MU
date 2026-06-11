@@ -10,8 +10,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-
-
+use RealRashid\SweetAlert\Facades\Alert;
 class ProductController extends Controller
 {
     public function index()
@@ -74,6 +73,8 @@ class ProductController extends Controller
             ]);
         }
 
+
+        Alert::toast('Product berhasil ditambahkan!', 'success');
 
         return redirect()
             ->route('admin.products.index')
@@ -162,6 +163,8 @@ class ProductController extends Controller
         }
 
 
+        Alert::toast('Product berhasil diperbarui!', 'success');
+
         return redirect()
             ->route('admin.products.index')
             ->with('success', 'Product berhasil diperbarui');
@@ -177,6 +180,7 @@ class ProductController extends Controller
 
         $product->delete();
 
+        Alert::toast('Product berhasil dihapus!', 'success');
 
         return back()->with('success', 'Product berhasil dihapus');
     }

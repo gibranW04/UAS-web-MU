@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Banner;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -28,14 +29,22 @@ class HomeController extends Controller
                 }
             );
         })
+        ->when($request->search, function ($query) use ($request) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        })
         ->latest()
         ->paginate(12);
+
+        $slides = Banner::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
 
         return view(
             'home.index',
             compact(
                 'products',
-                'categories'
+                'categories',
+                'slides'
             )
         );
     }
