@@ -13,8 +13,10 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 
 use App\Http\Controllers\User\AddressController as UserAddressController;
+use App\Http\Controllers\User\ReviewController as UserReviewController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\OrderController as UserOrderController;
 use App\Http\Controllers\User\WishlistController as UserWishlistController;
@@ -83,6 +85,11 @@ Route::middleware('auth')->group(function () {
         [PaymentController::class, 'success']
     )->name('payment.success');
 
+    Route::get(
+        '/payment/status/{order}',
+        [PaymentController::class, 'status']
+    )->name('payment.status');
+
 });
 
 
@@ -135,10 +142,20 @@ Route::middleware([
         [AdminOrderController::class, 'show']
     )->name('orders.show');
 
+    Route::patch(
+        '/orders/{id}/status',
+        [AdminOrderController::class, 'updateStatus']
+    )->name('orders.status');
+
     Route::get(
         '/customers',
         [CustomerController::class, 'index']
     )->name('customers.index');
+
+    Route::get(
+        '/reviews',
+        [AdminReviewController::class, 'index']
+    )->name('reviews.index');
 
 });
 
@@ -177,6 +194,11 @@ Route::middleware([
         [UserOrderController::class, 'show']
     )->name('orders.show');
 
+    Route::post(
+        '/orders/{id}/cancel',
+        [UserOrderController::class, 'cancel']
+    )->name('orders.cancel');
+
     Route::get(
         '/wishlists',
         [UserWishlistController::class, 'index']
@@ -191,5 +213,20 @@ Route::middleware([
         '/wishlists/{id}',
         [UserWishlistController::class, 'destroy']
     )->name('wishlists.destroy');
+
+    Route::post(
+        '/wishlists/toggle',
+        [UserWishlistController::class, 'toggle']
+    )->name('wishlists.toggle');
+
+    Route::post(
+        '/orders/{id}/receive',
+        [UserOrderController::class, 'receive']
+    )->name('orders.receive');
+
+    Route::post(
+        '/reviews',
+        [UserReviewController::class, 'store']
+    )->name('reviews.store');
 
 });

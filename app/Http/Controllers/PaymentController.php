@@ -18,8 +18,21 @@ class PaymentController extends Controller
             'status' => 'paid',
             'payment_status' => 'success',
             'payment_type' => $request->payment_type ?? 'unknown',
+            'paid_at' => now(),
         ]);
 
-        return response()->json(['message' => 'Payment confirmed']);
+        return response()->json([
+            'message' => 'Payment confirmed',
+            'order_id' => $order->id,
+        ]);
+    }
+
+    public function status($id)
+    {
+        $order = Order::where('user_id', Auth::id())
+            ->with('items', 'shippingAddress')
+            ->findOrFail($id);
+
+        return view('payment.success', compact('order'));
     }
 }

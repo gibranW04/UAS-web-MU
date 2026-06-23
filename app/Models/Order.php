@@ -16,7 +16,23 @@ class Order extends Model
         'payment_status',
         'snap_token',
         'notes',
+        'paid_at',
+        'processed_at',
+        'shipped_at',
+        'delivered_at',
+        'cancelled_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'paid_at' => 'datetime',
+            'processed_at' => 'datetime',
+            'shipped_at' => 'datetime',
+            'delivered_at' => 'datetime',
+            'cancelled_at' => 'datetime',
+        ];
+    }
 
     public function user()
     {
@@ -31,5 +47,10 @@ class Order extends Model
     public function shippingAddress()
     {
         return $this->belongsTo(Address::class, 'shipping_address_id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

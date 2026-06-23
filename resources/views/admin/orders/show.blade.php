@@ -48,7 +48,7 @@
                                 <div class="flex items-center gap-4 py-3">
                                     <div class="w-14 h-14 rounded-lg bg-slate-50 dark:bg-gray-800 flex-shrink-0 overflow-hidden">
                                         @if($item->variant && $item->variant->product && $item->variant->product->images->first())
-                                        <img src="{{ $item->variant->product->images->first()->image }}" alt="{{ $item->product_name }}" class="w-full h-full object-contain">
+                                        <img src="{{ asset('storage/' . $item->variant->product->images->first()->image) }}" alt="{{ $item->product_name }}" class="w-full h-full object-contain">
                                         @else
                                         <div class="w-full h-full flex items-center justify-center text-slate-300 dark:text-slate-600">
                                             <i data-lucide="box" class="w-6 h-6"></i>
@@ -76,7 +76,7 @@
                             <div class="space-y-3 text-sm">
                                 <div class="flex justify-between">
                                     <span class="text-slate-500 dark:text-slate-400">Status</span>
-                                    @php $colors = ['pending' => 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400', 'processing' => 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400', 'shipped' => 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', 'delivered' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400', 'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400']; @endphp
+                                    @php $colors = ['pending' => 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400', 'paid' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', 'processing' => 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400', 'shipped' => 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', 'delivered' => 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400', 'cancelled' => 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400']; @endphp
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold {{ $colors[$order->status] ?? 'bg-slate-100 text-slate-700' }}">{{ ucfirst($order->status) }}</span>
                                 </div>
                                 <div class="flex justify-between">
@@ -92,6 +92,30 @@
                                     <span class="font-medium">{{ $order->created_at->format('d M Y H:i') }}</span>
                                 </div>
                             </div>
+
+                            @php
+                                $nextStatuses = match($order->status) {
+                                    'pending' => ['paid', 'cancelled'],
+                                    'paid' => ['processing', 'cancelled'],
+                                    'processing' => ['shipped', 'cancelled'],
+                                    'shipped' => ['delivered', 'cancelled'],
+                                    default => [],
+                                };
+                            @endphp
+                            @if(!empty($nextStatuses))
+                            <form action="{{ route('admin.orders.status', $order->id) }}" method="POST" class="mt-5 pt-4 border-t border-slate-100 dark:border-gray-800">
+                                @csrf @method('PATCH')
+                                <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">Update Status</label>
+                                <div class="flex gap-2">
+                                    <select name="status" class="flex-1 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-slate-900 dark:text-white outline-none transition focus:border-[#DA291C] focus:ring-2 focus:ring-red-500/20">
+                                        @foreach($nextStatuses as $st)
+                                            <option value="{{ $st }}">{{ ucfirst($st) }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="px-4 py-2 rounded-lg bg-[#DA291C] text-white text-sm font-semibold hover:bg-[#B91C1C] transition-colors">Update</button>
+                                </div>
+                            </form>
+                            @endif
                         </div>
 
                         <div class="rounded-xl bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 shadow-sm p-6">

@@ -63,7 +63,7 @@
                         <th class="text-left px-5 py-3.5 font-semibold text-slate-600">Status</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y">
+                <tbody class="divide-y text-slate-900">
                     @forelse($recentOrders as $order)
                     <tr class="hover:bg-slate-50">
                         <td class="px-5 py-4 font-semibold">#{{ $order->order_number }}</td>

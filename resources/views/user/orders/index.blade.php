@@ -89,6 +89,9 @@
                         <div class="flex items-center gap-3">
                             <span class="text-sm font-bold text-slate-900">Rp {{ number_format($order->total_amount) }}</span>
                             <a href="{{ route('user.orders.show', $order->id) }}" class="text-xs font-semibold text-[#DA291C] hover:text-[#B91C1C] transition-colors">Detail</a>
+                            @if($order->status === 'pending')
+                            <a href="{{ route('user.orders.show', $order->id) }}" class="text-xs font-semibold text-emerald-600 hover:text-emerald-700 transition-colors bg-emerald-50 px-3 py-1.5 rounded-full">Bayar</a>
+                            @endif
                         </div>
                     </div>
                     <div class="px-5 py-4">

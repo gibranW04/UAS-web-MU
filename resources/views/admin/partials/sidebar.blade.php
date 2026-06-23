@@ -32,13 +32,9 @@
             <i data-lucide="users" class="w-5 h-5 flex-shrink-0"></i>
             <span>Customers</span>
         </a>
-        <a href="#" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all">
-            <i data-lucide="bar-chart-3" class="w-5 h-5 flex-shrink-0"></i>
-            <span>Reports</span>
-        </a>
-        <a href="#" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all">
-            <i data-lucide="settings" class="w-5 h-5 flex-shrink-0"></i>
-            <span>Settings</span>
+        <a href="{{ route('admin.reviews.index') }}" class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition-all {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+            <i data-lucide="star" class="w-5 h-5 flex-shrink-0"></i>
+            <span>Reviews</span>
         </a>
 
         <div class="border-t border-white/5 my-3"></div>

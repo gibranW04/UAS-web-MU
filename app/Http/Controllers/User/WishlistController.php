@@ -51,4 +51,32 @@ class WishlistController extends Controller
         Alert::toast('Produk dihapus dari wishlist!', 'success');
         return back();
     }
+
+    public function toggle(Request $request)
+    {
+        $request->validate(['product_id' => 'required|exists:products,id']);
+
+        $wishlist = Wishlist::where('user_id', Auth::id())
+            ->where('product_id', $request->product_id)
+            ->first();
+
+        if ($wishlist) {
+            $wishlist->delete();
+            return response()->json([
+                'status' => 'removed',
+                'message' => 'Produk dihapus dari wishlist',
+            ]);
+        }
+
+        $wishlist = Wishlist::create([
+            'user_id' => Auth::id(),
+            'product_id' => $request->product_id,
+        ]);
+
+        return response()->json([
+            'status' => 'added',
+            'message' => 'Produk ditambahkan ke wishlist',
+            'wishlist_id' => $wishlist->id,
+        ]);
+    }
 }

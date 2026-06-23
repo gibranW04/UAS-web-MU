@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Banner;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -39,12 +41,17 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->get();
 
+        $wishlistIds = Auth::check()
+            ? Wishlist::where('user_id', Auth::id())->pluck('product_id')->toArray()
+            : [];
+
         return view(
             'home.index',
             compact(
                 'products',
                 'categories',
-                'slides'
+                'slides',
+                'wishlistIds'
             )
         );
     }
@@ -54,7 +61,8 @@ class HomeController extends Controller
         $product = Product::with([
             'category',
             'images',
-            'variants'
+            'variants',
+            'reviews.user'
         ])
         ->where(
             'slug',
@@ -62,9 +70,15 @@ class HomeController extends Controller
         )
         ->firstOrFail();
 
+        $inWishlist = Auth::check()
+            ? Wishlist::where('user_id', Auth::id())
+                ->where('product_id', $product->id)
+                ->exists()
+            : false;
+
         return view(
             'home.show',
-            compact('product')
+            compact('product', 'inWishlist')
         );
     }
 }
